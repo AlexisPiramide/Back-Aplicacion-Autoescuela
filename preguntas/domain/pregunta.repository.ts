@@ -1,4 +1,4 @@
 import Pregunta from "./pregunta"
-export default interface OfertaRepository {
+export default interface PreguntaRepository {
     getPreguntas(): Promise<Pregunta[]>
 }

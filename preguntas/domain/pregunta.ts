@@ -1,4 +1,4 @@
-export default interface Oferta {
+export default interface Pregunta {
     id?: number;
     pregunta: String;
     opciones: String [];
