@@ -18,6 +18,7 @@ export default class PreguntaPostgres implements PreguntaRepository{
             opciones.push(pregunta.opcion4)
 
             const preguntaDB: Pregunta = {
+                id: pregunta.id,
                 pregunta: pregunta.pregunta,
                 opciones,
                 explicacion: pregunta.explicacion,
