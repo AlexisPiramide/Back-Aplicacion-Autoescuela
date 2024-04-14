@@ -22,6 +22,27 @@ CREATE TABLE respuesta (
     FOREIGN KEY (pregunta_id) REFERENCES pregunta (id)
 );
 
+CREATE TABLE usuario (
+    usuario VARCHAR(100) NOT NULL UNIQUE PRIMARY KEY,
+    contrasena VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE contacto (
+    nombre VARCHAR(100) NOT NULL,
+    apellido VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    usuario_id INTEGER NOT NULL,
+    mensaje TEXT NOT NULL,
+    FOREIGN KEY (usuario_id) REFERENCES usuario (id),
+);
+
+CREATE TABLE especialidades (
+    usuario VARCHAR(100) NOT NULL,
+    categoria VARCHAR(100) NOT NULL,
+    PRIMARY KEY (usuario, categoria),
+    FOREIGN KEY (usuario) REFERENCES usuario (usuario),
+    FOREIGN KEY (categoria) REFERENCES categoria (categoria)
+);
 
 -- Insertar categorías
 INSERT INTO categoria (categoria) VALUES 
