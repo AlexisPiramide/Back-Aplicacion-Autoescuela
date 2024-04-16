@@ -4,7 +4,8 @@ CREATE TABLE categoria (
 
 CREATE TABLE pregunta (
     id SERIAL PRIMARY KEY,
-    pregunta VARCHAR(255) NOT NULL,
+    texto TEXT NOT NULL,
+    imagen VARCHAR(255),
     opcion1 VARCHAR(255) NOT NULL,
     opcion2 VARCHAR(255) NOT NULL,
     opcion3 VARCHAR(255) NOT NULL,
@@ -15,33 +16,20 @@ CREATE TABLE pregunta (
     FOREIGN KEY (categoria) REFERENCES categoria (categoria)
 );
 
+CREATE TABLE examen (
+    id SERIAL PRIMARY KEY,
+    fecha_inicio DATE,
+    fecha_fin DATE
+)
+
 CREATE TABLE respuesta (
-    pregunta_id INTEGER,
+    id SERIAL PRIMARY KEY,
     opcion INTEGER CHECK (opcion BETWEEN 1 AND 4),
     respuesta BOOLEAN,
+    examen_id INTEGER,
+    pregunta_id INTEGER,
+    FOREIGN KEY (examen_id) REFERENCES examen (id),
     FOREIGN KEY (pregunta_id) REFERENCES pregunta (id)
-);
-
-CREATE TABLE usuario (
-    usuario VARCHAR(100) NOT NULL UNIQUE PRIMARY KEY,
-    contrasena VARCHAR(100) NOT NULL
-);
-
-CREATE TABLE contacto (
-    nombre VARCHAR(100) NOT NULL,
-    apellido VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    usuario_id INTEGER NOT NULL,
-    mensaje TEXT NOT NULL,
-    FOREIGN KEY (usuario_id) REFERENCES usuario (id),
-);
-
-CREATE TABLE especialidades (
-    usuario VARCHAR(100) NOT NULL,
-    categoria VARCHAR(100) NOT NULL,
-    PRIMARY KEY (usuario, categoria),
-    FOREIGN KEY (usuario) REFERENCES usuario (usuario),
-    FOREIGN KEY (categoria) REFERENCES categoria (categoria)
 );
 
 -- Insertar categorías
@@ -56,3 +44,4 @@ INSERT INTO pregunta (pregunta, opcion1, opcion2, opcion3, opcion4, respuesta, e
 ('¿Cuál es la velocidad máxima permitida en una zona residencial?', '50 km/h', '60 km/h', '40 km/h', '70 km/h', 3, 'En las zonas residenciales, la velocidad máxima permitida suele ser de 40 km/h. Esto se implementa para garantizar la seguridad de los peatones y residentes.', 'Normas de Seguridad'),
 ('¿Cuál es la tasa máxima de alcohol permitida en sangre para conducir en tu país?', '0.5 g/l', '0.8 g/l', '0.2 g/l', '1.0 g/l', 2, 'La tasa máxima de alcohol permitida en sangre para conducir en muchos países es de 0.8 g/l. Superar este límite puede resultar en sanciones legales y poner en riesgo la seguridad vial.', 'Normativas de Conducción');
 
+SELECT * FROM pregunta ORDER BY RANDOM() LIMIT 30;
