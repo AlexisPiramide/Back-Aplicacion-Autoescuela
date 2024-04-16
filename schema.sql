@@ -45,3 +45,12 @@ INSERT INTO pregunta (pregunta, opcion1, opcion2, opcion3, opcion4, respuesta, e
 ('¿Cuál es la tasa máxima de alcohol permitida en sangre para conducir en tu país?', '0.5 g/l', '0.8 g/l', '0.2 g/l', '1.0 g/l', 2, 'La tasa máxima de alcohol permitida en sangre para conducir en muchos países es de 0.8 g/l. Superar este límite puede resultar en sanciones legales y poner en riesgo la seguridad vial.', 'Normativas de Conducción');
 
 SELECT * FROM pregunta ORDER BY RANDOM() LIMIT 30;
+
+SELECT * FROM pregunta ORDER BY RANDOM() LIMIT 30 WHERE categoria = '';
+
+
+SELECT * FROM examen;
+
+SELECT *
+FROM examen
+JOIN pregunta ON respuesta.pregunta_id = pregunta.id;
