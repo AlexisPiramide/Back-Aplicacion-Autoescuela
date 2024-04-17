@@ -54,3 +54,14 @@ SELECT * FROM examen;
 SELECT *
 FROM examen
 JOIN pregunta ON respuesta.pregunta_id = pregunta.id;
+
+WITH nuevo_examen AS (
+    INSERT INTO examen (fecha_inicio)
+    VALUES (CURRENT_DATE)
+    RETURNING id
+)
+INSERT INTO respuesta (pregunta_id, examen_id) 
+SELECT id, (SELECT id FROM nuevo_examen)
+FROM pregunta
+ORDER BY RANDOM()
+LIMIT 30;

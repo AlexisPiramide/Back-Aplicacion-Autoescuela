@@ -6,9 +6,8 @@ import executeQuery from "../../../context/postgres.connector";
 export default class ExamenPostgres implements ExamenRepository {
 
     async nuevoExamen(examen: Examen): Promise<Examen> {
-        const query = `SELECT * FROM pregunta ORDER BY RANDOM() LIMIT 30;`;
 
-        const query2 = 'INSERT INTO examen (///) SELECT /// FROM pregunta ORDER BY RANDOM() LIMIT 30 RETURNING *;'
+        const query = `WITH nuevo_examen AS(INSERT INTO examen(fecha_inicio) VALUES(CURRENT_DATE) RETURNING id) INSERT INTO respuesta(pregunta_id, examen_id)SELECT id, (SELECT id FROM nuevo_examen) FROM pregunta ORDER BY RANDOM() LIMIT 30;`
 
         const rows: any[] = await executeQuery(query);
 
@@ -36,9 +35,10 @@ export default class ExamenPostgres implements ExamenRepository {
         return examen
     }
     async nuevoExamenCategorias(examen: Examen, categoria: string): Promise<Examen> {
-        const query = `SELECT * FROM pregunta ORDER BY RANDOM() LIMIT 30 WHERE categoria = '${categoria}';`;
-
-        const query2 = 'INSERT INTO examen (///) SELECT /// FROM pregunta ORDER BY RANDOM() LIMIT 30 RETURNING *;'
+        const query = `WITH nuevo_examen AS (INSERT INTO examen(fecha_inicio) VALUES(CURRENT_DATE) RETURNING id) 
+                       INSERT INTO respuesta(pregunta_id, examen_id)
+                       SELECT id, (SELECT id FROM nuevo_examen) FROM pregunta WHERE categoria='${categoria}' 
+                       ORDER BY RANDOM() LIMIT 30;`
 
         const rows: any[] = await executeQuery(query);
 
@@ -152,7 +152,7 @@ export default class ExamenPostgres implements ExamenRepository {
             fecha_inicio: rows[0].fecha_inicio,
             fecha_fin: rows[0].fecha_fin,
             respuestas: respuestas,
-            
+
         };
 
         return examen
