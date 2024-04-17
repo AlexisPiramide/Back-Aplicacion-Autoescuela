@@ -7,7 +7,8 @@ export default class ExamenPostgres implements ExamenRepository {
 
     async nuevoExamen(usuario: string): Promise<Examen> {
         console.log(1,usuario)
-        const query = `WITH nuevo_examen AS (
+        const query = `
+        WITH nuevo_examen AS (
             INSERT INTO examen(fecha_inicio, usuario) VALUES (CURRENT_DATE, '${usuario}') RETURNING *
         )
         INSERT INTO respuesta(pregunta_id, examen_id)
