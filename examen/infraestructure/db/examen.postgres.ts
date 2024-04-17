@@ -5,12 +5,18 @@ import ExamenRepository from "../../domain/examen.repository";
 import executeQuery from "../../../context/postgres.connector";
 export default class ExamenPostgres implements ExamenRepository {
 
-    async nuevoExamen(examen: Examen): Promise<Examen> {
-
-        const query = `WITH nuevo_examen AS(INSERT INTO examen(fecha_inicio) VALUES(CURRENT_DATE) RETURNING id) INSERT INTO respuesta(pregunta_id, examen_id)SELECT id, (SELECT id FROM nuevo_examen) FROM pregunta ORDER BY RANDOM() LIMIT 30 returning *;`
+    async nuevoExamen(usuario: string): Promise<Examen> {
+        console.log(1,usuario)
+        const query = `WITH nuevo_examen AS (
+            INSERT INTO examen(fecha_inicio, usuario) VALUES (CURRENT_DATE, '${usuario}') RETURNING *
+        )
+        INSERT INTO respuesta(pregunta_id, examen_id)
+        SELECT id, (SELECT id FROM nuevo_examen) FROM pregunta ORDER BY RANDOM() LIMIT 30 RETURNING *, (SELECT fecha_inicio FROM nuevo_examen);
+        `
 
         const rows: any[] = await executeQuery(query);
-
+        console.log(1)
+        console.log(rows[0])       
         const preguntas: Pregunta[] = [];
         rows.forEach(pregunta => {
             const opciones: any[] = [];
@@ -31,14 +37,20 @@ export default class ExamenPostgres implements ExamenRepository {
             preguntas.push(preguntaDB);
         });
 
+        const examen: Examen = {
+            id: rows[0].examen_id,
+            fecha_inicio: rows[0].fecha_inicio,
+            preguntas: preguntas
+        };
 
         return examen
     }
-    async nuevoExamenCategorias(examen: Examen, categoria: string): Promise<Examen> {
-        const query = `WITH nuevo_examen AS (INSERT INTO examen(fecha_inicio) VALUES(CURRENT_DATE) RETURNING id) 
-                       INSERT INTO respuesta(pregunta_id, examen_id)
-                       SELECT id, (SELECT id FROM nuevo_examen) FROM pregunta WHERE categoria='${categoria}' 
-                       ORDER BY RANDOM() LIMIT 30 returning *;`
+    async nuevoExamenCategorias(usuario: string, categoria: string): Promise<Examen> {
+        const query = `
+                    WITH nuevo_examen AS(INSERT INTO examen(fecha_inicio, usuario) VALUES(CURRENT_DATE,'${usuario}') RETURNING * ) 
+                    INSERT INTO respuesta(pregunta_id, examen_id)
+                    SELECT id,(SELECT id FROM nuevo_examen) FROM pregunta WHERE categoria='${categoria} ORDER BY RANDOM() LIMIT 30 returning *, (SELECT fecha_inicio FROM nuevo_examen);
+                    `
 
         const rows: any[] = await executeQuery(query);
 
@@ -62,6 +74,11 @@ export default class ExamenPostgres implements ExamenRepository {
             preguntas.push(preguntaDB);
         });
 
+        const examen: Examen = {
+            id: rows[0].examen_id,
+            fecha_inicio: rows[0].fecha_inicio,
+            preguntas: preguntas
+        };
 
         return examen
 
@@ -120,18 +137,21 @@ export default class ExamenPostgres implements ExamenRepository {
     }
 
     async getExamen(id: number): Promise<Examen> {
+         
         const query = `SELECT * FROM examen WHERE id = ${id};`;
 
         const rows: any[] = await executeQuery(query);
 
-        const examen: Examen = {
+       const examen: Examen = {
             id: rows[0].id,
             fecha_inicio: rows[0].preguntas,
             fecha_fin: rows[0].respuestas,
         };
 
         return examen
+        
     }
+
     async getRespuestasExamen(id: number): Promise<Examen> {
         const query = `SELECT * FROM respuesta JOIN examen ON respuesta.examen_id = examen.id WHERE examen.id = ${id};`;
 

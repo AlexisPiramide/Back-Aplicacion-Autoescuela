@@ -9,6 +9,14 @@ export default class ExamenUsecases {
         return this.examenRepository.getExamenes();
     }
 
+    async nuevoExamen(usuario: string) {
+        return this.examenRepository.nuevoExamen(usuario);
+    }
+
+    async nuevoExamenCategorias(usuario: string,categoria: string) {
+        return this.examenRepository.nuevoExamenCategorias(usuario,categoria);
+    }
+
     async getExamen(id: number) {
         return this.examenRepository.getExamen(id);
     }

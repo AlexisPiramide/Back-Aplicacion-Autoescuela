@@ -2,8 +2,8 @@ import Respuesta from '../../respuestas/domain/respuesta';
 import Examen from './examen';
 
 export default interface ExamenRepository {
-    nuevoExamen(examen: Examen): Promise<Examen>
-    nuevoExamenCategorias(examen: Examen,categoria: string): Promise<Examen>
+    nuevoExamen(usuario:string): Promise<Examen>
+    nuevoExamenCategorias(usuario:string,categoria: string): Promise<Examen>
     
     getExamenes(): Promise<Examen[]>
     getExamenesAcabados(): Promise<Examen[]>

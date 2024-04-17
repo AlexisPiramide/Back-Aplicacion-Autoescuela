@@ -46,4 +46,18 @@ router.post("/respuestas/:id",isAuth, async (req, res) => {
     res.json(resultado);
 });
 
+router.post("/nuevoExamen",isAuth, async (req, res) => {
+
+    const usuario = req.body.alias;
+    const resultado = await examenUseCases.nuevoExamen(usuario);
+    res.json(resultado);
+});
+
+router.post("/nuevoExamen/:categoria",isAuth, async (req, res) => {
+    const usuario = req.body.alias;
+    const categoria = req.params.categoria;
+    const resultado = await examenUseCases.nuevoExamenCategorias(usuario,categoria);
+    res.json(resultado);
+});
+
 export default router;
