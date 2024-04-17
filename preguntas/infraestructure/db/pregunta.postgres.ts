@@ -19,7 +19,7 @@ export default class PreguntaPostgres implements PreguntaRepository{
 
             const preguntaDB: Pregunta = {
                 id: pregunta.id,
-                pregunta: pregunta.pregunta,
+                texto: pregunta.texto,
                 opciones,
                 explicacion: pregunta.explicacion,
                 respuesta: pregunta.respuesta,

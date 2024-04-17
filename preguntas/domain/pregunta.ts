@@ -1,6 +1,6 @@
 export default interface Pregunta {
     id?: number;
-    pregunta: String;
+    texto: String;
     opciones: String [];
     explicacion: String;
     respuesta: number;
