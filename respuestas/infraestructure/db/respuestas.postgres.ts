@@ -52,7 +52,7 @@ export default class RespuestaPostgres implements RespuestaRepository {
 
             const preguntaDB: Pregunta = {
 
-                pregunta: respuesta.pregunta,
+                texto: respuesta.texto,
                 opciones,
                 explicacion: respuesta.explicacion,
                 respuesta: respuesta.respuesta_Correcta,

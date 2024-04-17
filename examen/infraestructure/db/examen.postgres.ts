@@ -7,7 +7,7 @@ export default class ExamenPostgres implements ExamenRepository {
 
     async nuevoExamen(examen: Examen): Promise<Examen> {
 
-        const query = `WITH nuevo_examen AS(INSERT INTO examen(fecha_inicio) VALUES(CURRENT_DATE) RETURNING id) INSERT INTO respuesta(pregunta_id, examen_id)SELECT id, (SELECT id FROM nuevo_examen) FROM pregunta ORDER BY RANDOM() LIMIT 30;`
+        const query = `WITH nuevo_examen AS(INSERT INTO examen(fecha_inicio) VALUES(CURRENT_DATE) RETURNING id) INSERT INTO respuesta(pregunta_id, examen_id)SELECT id, (SELECT id FROM nuevo_examen) FROM pregunta ORDER BY RANDOM() LIMIT 30 returning *;`
 
         const rows: any[] = await executeQuery(query);
 
@@ -38,7 +38,7 @@ export default class ExamenPostgres implements ExamenRepository {
         const query = `WITH nuevo_examen AS (INSERT INTO examen(fecha_inicio) VALUES(CURRENT_DATE) RETURNING id) 
                        INSERT INTO respuesta(pregunta_id, examen_id)
                        SELECT id, (SELECT id FROM nuevo_examen) FROM pregunta WHERE categoria='${categoria}' 
-                       ORDER BY RANDOM() LIMIT 30;`
+                       ORDER BY RANDOM() LIMIT 30 returning *;`
 
         const rows: any[] = await executeQuery(query);
 
