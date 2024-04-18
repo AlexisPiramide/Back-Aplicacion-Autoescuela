@@ -6,7 +6,7 @@ import executeQuery from "../../../context/postgres.connector";
 export default class ExamenPostgres implements ExamenRepository {
 
     async nuevoExamen(usuario: string): Promise<Examen> {
-        console.log(1,usuario)
+
         const query = `
         WITH nuevo_examen AS (
             INSERT INTO examen(fecha_inicio, usuario) VALUES (CURRENT_DATE, '${usuario}') RETURNING *
@@ -16,10 +16,14 @@ export default class ExamenPostgres implements ExamenRepository {
         `
 
         const rows: any[] = await executeQuery(query);
-        console.log(1)
-        console.log(rows[0])       
+        const id_examen = rows[0].examen_id
+
+        const querypreguntas = `SELECT * FROM pregunta WHERE id IN (SELECT pregunta_id FROM respuesta WHERE examen_id = ${id_examen});`
+
+        const preguntasRows: any[] = await executeQuery(querypreguntas);
+
         const preguntas: Pregunta[] = [];
-        rows.forEach(pregunta => {
+        preguntasRows.forEach(pregunta => {
             const opciones: any[] = [];
 
             opciones.push(pregunta.opcion1)
@@ -39,13 +43,14 @@ export default class ExamenPostgres implements ExamenRepository {
         });
 
         const examen: Examen = {
-            id: rows[0].examen_id,
+            id: id_examen,
             fecha_inicio: rows[0].fecha_inicio,
             preguntas: preguntas
         };
 
         return examen
     }
+
     async nuevoExamenCategorias(usuario: string, categoria: string): Promise<Examen> {
         const query = `
                     WITH nuevo_examen AS(INSERT INTO examen(fecha_inicio, usuario) VALUES(CURRENT_DATE,'${usuario}') RETURNING * ) 
@@ -54,9 +59,14 @@ export default class ExamenPostgres implements ExamenRepository {
                     `
 
         const rows: any[] = await executeQuery(query);
+        const id_examen = rows[0].examen_id
+
+        const querypreguntas = `SELECT * FROM pregunta WHERE id IN (SELECT pregunta_id FROM respuesta WHERE examen_id = ${id_examen});`
+
+        const preguntasRows: any[] = await executeQuery(querypreguntas);
 
         const preguntas: Pregunta[] = [];
-        rows.forEach(pregunta => {
+        preguntasRows.forEach(pregunta => {
             const opciones: any[] = [];
 
             opciones.push(pregunta.opcion1)
@@ -76,7 +86,7 @@ export default class ExamenPostgres implements ExamenRepository {
         });
 
         const examen: Examen = {
-            id: rows[0].examen_id,
+            id: id_examen,
             fecha_inicio: rows[0].fecha_inicio,
             preguntas: preguntas
         };
@@ -138,19 +148,19 @@ export default class ExamenPostgres implements ExamenRepository {
     }
 
     async getExamen(id: number): Promise<Examen> {
-         
+
         const query = `SELECT * FROM examen WHERE id = ${id};`;
 
         const rows: any[] = await executeQuery(query);
 
-       const examen: Examen = {
+        const examen: Examen = {
             id: rows[0].id,
             fecha_inicio: rows[0].preguntas,
             fecha_fin: rows[0].respuestas,
         };
 
         return examen
-        
+
     }
 
     async getRespuestasExamen(id: number): Promise<Examen> {

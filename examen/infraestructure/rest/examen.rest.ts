@@ -47,7 +47,6 @@ router.post("/respuestas/:id",isAuth, async (req, res) => {
 });
 
 router.post("/nuevoExamen",isAuth, async (req, res) => {
-
     const usuario = req.body.alias;
     const resultado = await examenUseCases.nuevoExamen(usuario);
     res.json(resultado);
