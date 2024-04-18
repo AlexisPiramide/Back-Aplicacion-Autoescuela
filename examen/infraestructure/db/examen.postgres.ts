@@ -112,6 +112,7 @@ export default class ExamenPostgres implements ExamenRepository {
 
         return examenes
     }
+    
     async getExamenesAcabados(): Promise<Examen[]> {
         const query = `SELECT * FROM examen WHERE fecha_fin IS NOT NULL;`;
 
