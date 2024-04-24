@@ -15,6 +15,12 @@ export default class ExamenPostgres implements ExamenRepository {
         `
 
         const rows: any[] = await executeQuery(query);
+        const id_examen = rows[0].examen_id
+
+        const querypreguntas = `SELECT * FROM pregunta WHERE id IN (SELECT pregunta_id FROM respuesta WHERE examen_id = ${id_examen});`
+
+        const preguntasRows: any[] = await executeQuery(querypreguntas);
+
         const preguntas: Pregunta[] = [];
         preguntasRows.forEach(pregunta => {
             const opciones: any[] = [];
@@ -153,8 +159,12 @@ export default class ExamenPostgres implements ExamenRepository {
         
         const rows: any[] = await executeQuery(query);
 
+        const querypreguntas = `SELECT * FROM pregunta WHERE id IN (SELECT pregunta_id FROM respuesta WHERE examen_id = ${id});`
+
+        const preguntasRows: any[] = await executeQuery(querypreguntas);
+
         const preguntas: Pregunta[] = [];
-        rows.forEach(pregunta => {
+        preguntasRows.forEach(pregunta => {
             const opciones: any[] = [];
 
             opciones.push(pregunta.opcion1)
@@ -174,7 +184,7 @@ export default class ExamenPostgres implements ExamenRepository {
         });
 
         const examen: Examen = {
-            id: rows[0].examen_id,
+            id: id,
             fecha_inicio: rows[0].fecha_inicio,
             preguntas: preguntas
         };

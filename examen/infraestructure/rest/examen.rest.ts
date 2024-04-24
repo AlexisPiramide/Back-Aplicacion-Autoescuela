@@ -30,6 +30,7 @@ router.get("/nuevos",isAuth, async (req, res) => {
 router.get("/:id",isAuth, async (req, res) => {
     const id = parseInt(req.params.id);
     const examen = await examenUseCases.getExamen(id);
+    console.log(examen);
     res.json(examen);
 });
 

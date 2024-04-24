@@ -41,8 +41,9 @@ router.post("/login", async (req: Request, res: Response) => {
   };
   try{
   const usuario: Usuario = await usuariosUseCases.login(usuarioAPI);
-  res.json({ alias: usuario.alias });
+
   const token = createToken(usuario);
+  console.log(token)
   res.json({ token });
   }
   catch(e){
