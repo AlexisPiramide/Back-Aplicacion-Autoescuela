@@ -23,8 +23,14 @@ router.post("/registro", async (req: Request, res: Response) => {
     alias,
     password,
   };
-  const usuario: Usuario = await usuariosUseCases.registro(usuarioAPI);
-  res.json({ alias: usuario.alias });
+  try{
+    const usuario: Usuario = await usuariosUseCases.registro(usuarioAPI);
+    res.json({ alias: usuario.alias });
+  }
+  catch(e){
+    res.status(404).json({ mensaje: "Usuario ya existe" });
+  }
+ 
 });
 
 router.post("/login", async (req: Request, res: Response) => {
@@ -33,11 +39,16 @@ router.post("/login", async (req: Request, res: Response) => {
     alias,
     password,
   };
+  try{
   const usuario: Usuario = await usuariosUseCases.login(usuarioAPI);
-  if (usuario === null)
-    res.status(404).json({ mensaje: "Usuario no encontrado" });
+  res.json({ alias: usuario.alias });
   const token = createToken(usuario);
   res.json({ token });
+  }
+  catch(e){
+    res.status(404).json({ mensaje: "Usuario/contraseña no es correcto" });
+  }
+ 
 });
 
 export default router;

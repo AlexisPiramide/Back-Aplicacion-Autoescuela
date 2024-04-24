@@ -6,7 +6,7 @@ import executeQuery from "../../../context/postgres.connector";
 export default class ExamenPostgres implements ExamenRepository {
 
     async nuevoExamen(usuario: string): Promise<Examen> {
-        console.log(1,usuario)
+        console.log(1, usuario)
         const query = `
         WITH nuevo_examen AS (
             INSERT INTO examen(fecha_inicio, usuario) VALUES (CURRENT_DATE, '${usuario}') RETURNING *
@@ -17,7 +17,7 @@ export default class ExamenPostgres implements ExamenRepository {
 
         const rows: any[] = await executeQuery(query);
         console.log(1)
-        console.log(rows[0])       
+        console.log(rows[0])
         const preguntas: Pregunta[] = [];
         rows.forEach(pregunta => {
             const opciones: any[] = [];
@@ -138,19 +138,45 @@ export default class ExamenPostgres implements ExamenRepository {
     }
 
     async getExamen(id: number): Promise<Examen> {
-         
-        const query = `SELECT * FROM examen WHERE id = ${id};`;
 
+        const query = `
+        SELECT examen.*, pregunta.*
+        FROM examen
+        JOIN respuesta ON respuesta.examen_id = examen.id
+        JOIN pregunta ON pregunta.id = respuesta.pregunta_id
+        WHERE examen.id = ${id};
+        `;
+        
         const rows: any[] = await executeQuery(query);
 
-       const examen: Examen = {
-            id: rows[0].id,
-            fecha_inicio: rows[0].preguntas,
-            fecha_fin: rows[0].respuestas,
+        const preguntas: Pregunta[] = [];
+        rows.forEach(pregunta => {
+            const opciones: any[] = [];
+
+            opciones.push(pregunta.opcion1)
+            opciones.push(pregunta.opcion2)
+            opciones.push(pregunta.opcion3)
+            opciones.push(pregunta.opcion4)
+
+            const preguntaDB: Pregunta = {
+                id: pregunta.id,
+                texto: pregunta.texto,
+                opciones,
+                explicacion: pregunta.explicacion,
+                respuesta: pregunta.respuesta,
+                categoria: pregunta.categoria
+            };
+            preguntas.push(preguntaDB);
+        });
+
+        const examen: Examen = {
+            id: rows[0].examen_id,
+            fecha_inicio: rows[0].fecha_inicio,
+            preguntas: preguntas
         };
 
         return examen
-        
+
     }
 
     async getRespuestasExamen(id: number): Promise<Examen> {
