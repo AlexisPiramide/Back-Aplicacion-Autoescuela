@@ -18,14 +18,19 @@ const usuariosUseCases: UsuarioUseCases = new UsuarioUseCases(
 const router = express.Router();
 
 router.post("/registro", async (req: Request, res: Response) => {
-  const { alias, password } = req.body;
+  const { alias, password, nombre,apellidos,email } = req.body;
   const usuarioAPI: Usuario = {
     alias,
     password,
+    nombre,
+    apellidos,
+    email
   };
+
   try{
     const usuario: Usuario = await usuariosUseCases.registro(usuarioAPI);
-    res.json({ alias: usuario.alias });
+    const token = createToken(usuario);
+    res.json({ alias: usuario.alias,token: token });
   }
   catch(e){
     res.status(404).json({ mensaje: "Usuario ya existe" });
@@ -41,10 +46,8 @@ router.post("/login", async (req: Request, res: Response) => {
   };
   try{
   const usuario: Usuario = await usuariosUseCases.login(usuarioAPI);
-
   const token = createToken(usuario);
-  console.log(token)
-  res.json({ token });
+  res.json({ alias: usuario.alias,token: token });
   }
   catch(e){
     res.status(404).json({ mensaje: "Usuario/contraseña no es correcto" });
