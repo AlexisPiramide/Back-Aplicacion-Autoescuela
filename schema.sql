@@ -4,7 +4,10 @@ CREATE TABLE categoria (
 
 CREATE TABLE usuario (
     alias VARCHAR(50) PRIMARY KEY,
-    password VARCHAR(100) NOT NULL
+    password VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    nombre VARCHAR(100) NOT NULL,
+    apellidos VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE pregunta (

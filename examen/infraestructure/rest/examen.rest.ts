@@ -42,7 +42,8 @@ router.get("/respuestas/:id",isAuth, async (req, res) => {
 
 router.post("/respuestas/:id",isAuth, async (req, res) => {
     const id = parseInt(req.params.id);
-    const respuestas = req.body;
+    console.log(req.body);
+    const respuestas = req.body.respuestas;
     const resultado = await examenUseCases.postRespuestas(respuestas,id);
     res.json(resultado);
 });

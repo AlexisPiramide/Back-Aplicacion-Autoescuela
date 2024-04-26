@@ -13,7 +13,7 @@ export default interface ExamenRepository {
 
     getRespuestasExamen(id: number): Promise<Examen>
 
-    postRespuestas(respuestas: Respuesta[],id: number): Promise<Examen>
+    postRespuestas(respuestas: any[],id: number): Promise<Examen>
 
 }
 

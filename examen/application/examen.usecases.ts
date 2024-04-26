@@ -33,7 +33,7 @@ export default class ExamenUsecases {
         return this.examenRepository.getRespuestasExamen(id);
     }
 
-    async postRespuestas(respuestas: Respuesta[],id: number) {
+    async postRespuestas(respuestas: any[],id: number) {
         return this.examenRepository.postRespuestas(respuestas,id);
     }
 

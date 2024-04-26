@@ -220,9 +220,8 @@ export default class ExamenPostgres implements ExamenRepository {
 
     }
 
-    async postRespuestas(respuestas: Respuesta[], id: number): Promise<Examen> {
+    async postRespuestas(respuestas: any[], id: number): Promise<Examen> {
         const query = `INSERT INTO respuesta (examen_id, pregunta_id, opcion, respuesta) VALUES `;
-
         respuestas.forEach(respuesta => {
             query.concat(`(${id}, ${respuesta.pregunta_id}, ${respuesta.opcion}, ${respuesta.respuesta}), `)
         });

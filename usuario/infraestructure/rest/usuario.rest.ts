@@ -30,7 +30,7 @@ router.post("/registro", async (req: Request, res: Response) => {
   try{
     const usuario: Usuario = await usuariosUseCases.registro(usuarioAPI);
     const token = createToken(usuario);
-    res.json({ alias: usuario.alias,token: token });
+    res.json({ alias: usuario.alias,nombre:usuario.nombre,apellidos: usuario.apellidos,token: token });
   }
   catch(e){
     res.status(404).json({ mensaje: "Usuario ya existe" });
