@@ -219,7 +219,7 @@ export default class ExamenPostgres implements ExamenRepository {
         return examen
 
     }
-
+    /*arreglar esto que no añade la opcion y la respuesta*/
     async postRespuestas(respuestas: any[], id: number): Promise<Examen> {
         const query = `INSERT INTO respuesta (examen_id, pregunta_id, opcion, respuesta) VALUES `;
         respuestas.forEach(respuesta => {
