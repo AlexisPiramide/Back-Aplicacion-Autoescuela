@@ -35,7 +35,7 @@ router.get("/:id",isAuth, async (req, res) => {
 });
 
 router.get("/respuestas/:id",isAuth, async (req, res) => {
-    const id = parseInt(req.params.id);
+    const id = parseInt(req.params.id);    
     const respuestas = await examenUseCases.getRespuestasExamen(id);
     res.json(respuestas);
 });
