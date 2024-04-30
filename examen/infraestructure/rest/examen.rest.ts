@@ -45,7 +45,16 @@ router.post("/respuestas/:id",isAuth, async (req, res) => {
     console.log(req.body);
     const respuestas = req.body.respuestas;
     const resultado = await examenUseCases.postRespuestas(respuestas,id);
-    res.json(resultado);
+
+    if(resultado){
+        const examen = await examenUseCases.cerrarExamen(id);
+        if(examen){
+            res.json({mensaje: "Respuestas guardadas"});
+        }
+    }
+    else{
+        res.json({mensaje: "Error al guardar respuestas"});
+    }
 });
 
 router.post("/nuevoExamen",isAuth, async (req, res) => {

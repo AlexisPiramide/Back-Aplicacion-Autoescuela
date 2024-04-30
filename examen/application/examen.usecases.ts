@@ -37,4 +37,8 @@ export default class ExamenUsecases {
         return this.examenRepository.postRespuestas(respuestas,id);
     }
 
+    async cerrarExamen(id: number) {
+        return this.examenRepository.cerrarExamen(id);
+    }
+
 }

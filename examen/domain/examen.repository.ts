@@ -15,5 +15,7 @@ export default interface ExamenRepository {
 
     postRespuestas(respuestas: any[],id: number): Promise<Examen>
 
+    cerrarExamen(id: number): Promise<Examen>
+
 }
 

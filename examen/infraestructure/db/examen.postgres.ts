@@ -248,4 +248,18 @@ export default class ExamenPostgres implements ExamenRepository {
         return examen
     }
 
+    async cerrarExamen(id: number): Promise<Examen> {
+        const query = `UPDATE examen SET fecha_fin = CURRENT_DATE WHERE id = ${id} RETURNING *;`;
+
+        const rows: any[] = await executeQuery(query);
+
+        const examen: Examen = {
+            id: id,
+            fecha_inicio: rows[0].fecha_inicio,
+            fecha_fin: rows[0].fecha_fin,
+        };
+
+        return examen
+    }
+
 }
