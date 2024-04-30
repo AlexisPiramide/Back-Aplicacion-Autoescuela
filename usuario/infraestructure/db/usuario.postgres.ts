@@ -29,6 +29,8 @@ export default class UsuarioRepositoryPostgres implements UsuarioRepository {
         alias: rows[0].alias,
         role: rows[0].role,
         password: rows[0].password,
+        nombre: rows[0].nombre,
+        apellidos: rows[0].apellidos,
       };
       return usuarioDB;
     }

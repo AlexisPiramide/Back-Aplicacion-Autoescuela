@@ -43,11 +43,14 @@ router.post("/login", async (req: Request, res: Response) => {
   const usuarioAPI: Usuario = {
     alias,
     password,
+    
   };
   try{
+   
   const usuario: Usuario = await usuariosUseCases.login(usuarioAPI);
+  
   const token = createToken(usuario);
-  res.json({ alias: usuario.alias,token: token });
+  res.json({ alias: usuario.alias,token: token,nombre:usuario.nombre,apellidos: usuario.apellidos});
   }
   catch(e){
     res.status(404).json({ mensaje: "Usuario/contraseña no es correcto" });
