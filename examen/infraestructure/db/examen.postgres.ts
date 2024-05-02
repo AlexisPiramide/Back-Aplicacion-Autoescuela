@@ -218,8 +218,11 @@ export default class ExamenPostgres implements ExamenRepository {
         return examen
 
     }
-    /*arreglar esto que no añade la opcion y la respuesta*/
+    /*arreglar esto que no añade la opcion y la respuesta
+    Solucion un bucle for con una query que se repite*/
     async postRespuestas(respuestas: any[], id: number): Promise<Examen> {
+      
+      
         const examenPreguntas = this.getExamen(id);
         let resultado;
         let query = `INSERT INTO respuesta (examen_id, pregunta_id, opcion, respuesta) VALUES `;
