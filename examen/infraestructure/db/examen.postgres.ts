@@ -220,12 +220,19 @@ export default class ExamenPostgres implements ExamenRepository {
     }
     /*arreglar esto que no añade la opcion y la respuesta*/
     async postRespuestas(respuestas: any[], id: number): Promise<Examen> {
-        const query = `INSERT INTO respuesta (examen_id, pregunta_id, opcion, respuesta) VALUES `;
-        respuestas.forEach(respuesta => {
-            query.concat(`(${id}, ${respuesta.pregunta_id}, ${respuesta.opcion}, ${respuesta.respuesta}), `)
+        const examenPreguntas = this.getExamen(id);
+        let resultado;
+        let query = `INSERT INTO respuesta (examen_id, pregunta_id, opcion, respuesta) VALUES `;
+        respuestas.map((respuesta, index) => {
+            if(examenPreguntas[index].respuesta && respuesta.respuesta){
+                resultado = true;
+            }else{
+                resultado = false;
+            }
+            query = query.concat(`(${id}, ${examenPreguntas[index].id}, ${respuesta.opcion}, ${resultado}), `);
         });
 
-        query.concat(` RETURNING *;`);
+        query = query.concat(` RETURNING *;`);
 
         const rows: any[] = await executeQuery(query);
 
