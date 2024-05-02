@@ -37,7 +37,10 @@ router.get("/:id",isAuth, async (req, res) => {
 router.get("/respuestas/:id",isAuth, async (req, res) => {
     const id = parseInt(req.params.id);    
     const respuestas = await examenUseCases.getRespuestasExamen(id);
-    res.json(respuestas);
+    const examen = await examenUseCases.getExamenSoloPreguntas(id);
+    console.log(examen);
+    console.log(respuestas);
+    res.json({examen,respuestas});
 });
 
 router.post("/respuestas/:id",isAuth, async (req, res) => {

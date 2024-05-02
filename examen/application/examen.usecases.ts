@@ -40,5 +40,8 @@ export default class ExamenUsecases {
     async cerrarExamen(id: number) {
         return this.examenRepository.cerrarExamen(id);
     }
+    async getExamenSoloPreguntas(id: number) {
+        return this.examenRepository.getExamenSoloPreguntas(id);
+    }
 
 }

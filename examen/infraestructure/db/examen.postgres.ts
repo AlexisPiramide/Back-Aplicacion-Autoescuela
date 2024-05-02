@@ -188,7 +188,7 @@ export default class ExamenPostgres implements ExamenRepository {
             fecha_inicio: rows[0].fecha_inicio,
             preguntas: preguntas
         };
-
+        
         return examen
 
     }
@@ -215,7 +215,6 @@ export default class ExamenPostgres implements ExamenRepository {
             respuestas: respuestas,
 
         };
-
         return examen
 
     }
@@ -260,6 +259,57 @@ export default class ExamenPostgres implements ExamenRepository {
         };
 
         return examen
+    }
+
+    async getExamenSoloPreguntas(id: number): Promise<Pregunta[]> {
+        const query = `SELECT * FROM pregunta WHERE id IN (SELECT pregunta_id FROM respuesta WHERE examen_id = ${id});`
+
+        const rows: any[] = await executeQuery(query);
+
+        const preguntas: Pregunta[] = [];
+        rows.forEach(pregunta => {
+
+            if (pregunta.respuesta === 1) {
+                const preguntaDB: Pregunta = {
+                    id: pregunta.id,
+                    pregunta_id:1,
+                    pregunta: pregunta.opcion1,
+                    texto: pregunta.texto,
+                    explicacion: pregunta.explicacion,
+                };
+                preguntas.push(preguntaDB);
+            } else if (pregunta.respuesta === 2) {
+                const preguntaDB: Pregunta = {
+                    id: pregunta.id,
+                    pregunta_id:2,
+                    pregunta: pregunta.opcion2,
+                    texto: pregunta.texto,
+                    explicacion: pregunta.explicacion,
+                };
+                preguntas.push(preguntaDB);
+            } else if (pregunta.respuesta === 3) {
+                const preguntaDB: Pregunta = {
+                    id: pregunta.id,
+                    pregunta_id:3,
+                    pregunta: pregunta.opcion3,
+                    texto: pregunta.texto,
+                    explicacion: pregunta.explicacion,
+                };
+                preguntas.push(preguntaDB);
+            } else if (pregunta.respuesta === 4) {
+                const preguntaDB: Pregunta = {
+                    id: pregunta.id,
+                    pregunta_id:4,
+                    pregunta: pregunta.opcion4,
+                    texto: pregunta.texto,
+                    explicacion: pregunta.explicacion,
+                };
+                preguntas.push(preguntaDB);
+            }
+            
+        });
+        console.log(preguntas)
+        return preguntas
     }
 
 }

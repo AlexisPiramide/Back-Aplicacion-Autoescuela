@@ -7,4 +7,5 @@ export default interface Examen {
     fecha_fin?: Date;
     preguntas?: Pregunta[];
     respuestas?: Respuesta[];
+    
 }

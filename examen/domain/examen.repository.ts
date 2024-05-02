@@ -1,3 +1,4 @@
+import Pregunta from '../../preguntas/domain/pregunta';
 import Respuesta from '../../respuestas/domain/respuesta';
 import Examen from './examen';
 
@@ -16,6 +17,6 @@ export default interface ExamenRepository {
     postRespuestas(respuestas: any[],id: number): Promise<Examen>
 
     cerrarExamen(id: number): Promise<Examen>
-
+    getExamenSoloPreguntas(id: number): Promise<Pregunta[]>
 }
 
