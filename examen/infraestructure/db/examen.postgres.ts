@@ -218,41 +218,18 @@ export default class ExamenPostgres implements ExamenRepository {
         return examen
 
     }
+
     /*arreglar esto que no añade la opcion y la respuesta
     Solucion un bucle for con una query que se repite*/
     async postRespuestas(respuestas: any[], id: number): Promise<Examen> {
       
-      
         const examenPreguntas = this.getExamen(id);
-        let resultado;
-        let query = `INSERT INTO respuesta (examen_id, pregunta_id, opcion, respuesta) VALUES `;
-        respuestas.map((respuesta, index) => {
-            if(examenPreguntas[index].respuesta && respuesta.respuesta){
-                resultado = true;
-            }else{
-                resultado = false;
-            }
-            query = query.concat(`(${id}, ${examenPreguntas[index].id}, ${respuesta.opcion}, ${resultado}), `);
+        respuestas.map(async (respuesta) => {
+            const query = `UPDATE respuesta SET opcion = ${respuesta.opcion}, respuesta = ${respuesta.respuesta} WHERE examen_id = ${id} AND pregunta_id = ${respuesta.pregunta_id};`;
+            await executeQuery(query);
         });
 
-        query = query.concat(` RETURNING *;`);
-
-        const rows: any[] = await executeQuery(query);
-
-        const respuestasDB: Respuesta[] = [];
-        rows.forEach(respuesta => {
-            const respuestaDB: Respuesta = {
-                pregunta_id: respuesta.pregunta_id,
-                opcion: respuesta.opcion,
-                respuesta: respuesta.respuesta,
-            };
-            respuestasDB.push(respuestaDB);
-        });
-
-        const examen: Examen = {
-            id: id,
-            respuestas: respuestasDB,
-        };
+        const examen = examenPreguntas;
 
         return examen
     }
