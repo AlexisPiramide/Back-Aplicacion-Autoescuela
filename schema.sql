@@ -26,8 +26,8 @@ CREATE TABLE pregunta (
 
 CREATE TABLE examen (
     id SERIAL PRIMARY KEY,
-    fecha_inicio DATE,
-    fecha_fin DATE,
+    fecha_inicio TIMESTAMP,
+    fecha_fin TIMESTAMP,
     usuario VARCHAR(100) NOT NULL,
     FOREIGN KEY (usuario) REFERENCES usuario (alias)
 );

@@ -223,7 +223,6 @@ export default class ExamenPostgres implements ExamenRepository {
             fecha_fin: rows[0].fecha_fin,
             respuestas: respuestas,
         };
-        console.log(examen)
         return examen
      
     }
@@ -244,7 +243,6 @@ export default class ExamenPostgres implements ExamenRepository {
                 }
 
                 const query = `UPDATE respuesta SET opcion = '${respuesta}', respuesta = '${opcion}' WHERE examen_id = ${id} AND pregunta_id = ${id_pregunta};`;
-                console.log(query)
                 await executeQuery(query);
             }
         });
@@ -314,7 +312,7 @@ export default class ExamenPostgres implements ExamenRepository {
             }
             
         });
-        console.log(preguntas)
+
         return preguntas
     }
 
