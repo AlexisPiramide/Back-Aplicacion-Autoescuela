@@ -5,4 +5,6 @@ export default interface Respuesta {
     pregunta?: Pregunta;
     pregunta_id?: number;
     respuesta: boolean;
+    correcta?:number;
+    opciones?: string[];
 }

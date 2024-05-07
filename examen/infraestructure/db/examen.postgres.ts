@@ -13,7 +13,7 @@ export default class ExamenPostgres implements ExamenRepository {
         INSERT INTO respuesta(pregunta_id, examen_id)
         SELECT id, (SELECT id FROM nuevo_examen) FROM pregunta ORDER BY RANDOM() LIMIT 30 RETURNING *, (SELECT fecha_inicio FROM nuevo_examen);
         `
-
+        
         const rows: any[] = await executeQuery(query);
         const id_examen = rows[0].examen_id
 
@@ -194,44 +194,63 @@ export default class ExamenPostgres implements ExamenRepository {
     }
 
     async getRespuestasExamen(id: number): Promise<Examen> {
-        const query = `SELECT * FROM respuesta JOIN examen ON respuesta.examen_id = examen.id WHERE examen.id = ${id};`;
+        const query = `SELECT respuesta.*, examen.*, pregunta.respuesta as valida, pregunta.opcion1, pregunta.opcion2, pregunta.opcion3, pregunta.opcion4
+        FROM respuesta
+        JOIN examen ON respuesta.examen_id = examen.id
+        JOIN pregunta ON respuesta.pregunta_id = pregunta.id
+        WHERE examen.id = ${id};`;
 
         const rows: any[] = await executeQuery(query);
 
         const respuestas: Respuesta[] = [];
+
         rows.forEach(respuesta => {
             const respuestaDB: Respuesta = {
                 pregunta_id: respuesta.pregunta_id,
                 opcion: respuesta.opcion,
                 respuesta: respuesta.respuesta,
+                correcta: respuesta.valida,
+                opciones: [respuesta.opcion1,respuesta.opcion2,respuesta.opcion3,respuesta.opcion4]
             };
+
             respuestas.push(respuestaDB);
         });
+
 
         const examen: Examen = {
             id: id,
             fecha_inicio: rows[0].fecha_inicio,
             fecha_fin: rows[0].fecha_fin,
             respuestas: respuestas,
-
         };
+        console.log(examen)
         return examen
-
+     
     }
 
-    /*arreglar esto que no añade la opcion y la respuesta
-    Solucion un bucle for con una query que se repite*/
+    /*Ahora hace el update, posible cambio quitar el Promise<Examen> y meter un Promise<Boolean>*/
     async postRespuestas(respuestas: any[], id: number): Promise<Examen> {
-      
-        const examenPreguntas = this.getExamen(id);
-        respuestas.map(async (respuesta) => {
-            const query = `UPDATE respuesta SET opcion = ${respuesta.opcion}, respuesta = ${respuesta.respuesta} WHERE examen_id = ${id} AND pregunta_id = ${respuesta.pregunta_id};`;
-            await executeQuery(query);
+        
+        const examenPreguntas = await this.getExamen(id);
+        
+        respuestas.map(async (respuesta,index) => {
+            if(examenPreguntas && examenPreguntas.preguntas){
+                const id_pregunta = examenPreguntas.preguntas[index].id;
+                const verdadera = examenPreguntas.preguntas[index].respuesta;
+                let opcion= false;
+                
+                if(respuesta===verdadera){
+                    opcion=true;
+                }
+
+                const query = `UPDATE respuesta SET opcion = '${respuesta}', respuesta = '${opcion}' WHERE examen_id = ${id} AND pregunta_id = ${id_pregunta};`;
+                console.log(query)
+                await executeQuery(query);
+            }
         });
+        const result = await this.getRespuestasExamen(id);
 
-        const examen = examenPreguntas;
-
-        return examen
+        return result
     }
 
     async cerrarExamen(id: number): Promise<Examen> {
