@@ -8,7 +8,7 @@ import routerUsuario from "./usuario/infraestructure/rest/usuario.rest";
 
 dotenv.config();
 const port = process.env.PORT;
-const allowedOrigins = ["http://"+process.env.PORT+":5173"];
+const allowedOrigins = ["http://"+process.env.HOST+":5173"];
 const options: cors.CorsOptions = {
   origin: allowedOrigins,
 };
