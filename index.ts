@@ -20,4 +20,5 @@ app.use("/api/usuario", routerUsuario);
 
 app.listen(process.env.PORT, () => {
   console.log(`Application started on port ${port}`);
+  console.log(`Esto va`)
 });
